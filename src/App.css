@@ -1,0 +1,3 @@
+input.password-input::-webkit-text-security {
+  -webkit-text-security: '*';
+}
