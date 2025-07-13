@@ -23,7 +23,7 @@ const Home = () => {
               </p>
               
               {/* Book a New Trip Button */}
-              <Link to="/book-trip">
+              <Link to="/book-a-new-trip">
                 <button className="bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-3 px-8 rounded-lg transition-colors shadow-lg">
                   Book a New Trip
                 </button>
@@ -45,7 +45,6 @@ const Home = () => {
       {/* Mobile Layout - Matches Figma Mobile Design */}
       <div className="md:hidden px-4 py-8 pb-24">
         <div className="bg-white rounded-2xl shadow-lg p-6 mx-auto max-w-sm">
-          {/* Mobile Image - Centered at top */}
           <div className="flex justify-center mb-8">
             <img
               src="https://res.cloudinary.com/dzyaesd9l/image/upload/v1752384319/t_dkmnvp.png"
@@ -54,7 +53,6 @@ const Home = () => {
             />
           </div>
           
-          {/* Mobile Content - Centered below image */}
           <div className="text-center space-y-6">
             <h1 className="text-3xl font-bold text-[#2f436e] leading-tight">
               Travel. Relax. Memories.
@@ -64,8 +62,7 @@ const Home = () => {
               With travel trip you can experience new travel and the best tourist destinations.
             </p>
             
-            {/* Full-width button for mobile */}
-            <Link to="/book-trip">
+            <Link to="/book-a-new-trip">
               <button className="w-full bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-3 px-6 rounded-lg transition-colors shadow-lg">
                 Book a New Trip
               </button>

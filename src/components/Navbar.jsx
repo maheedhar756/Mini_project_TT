@@ -30,7 +30,7 @@ const Navbar = () => {
     <>
       {/* Nav for Desktop */}
       <nav className="hidden md:block fixed top-0 w-full bg-white shadow-md z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-[#304766] w-full relative h-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-[#304766] w-full relative h-12">
           <h1 className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-white font-[caveat]">
             <Link to="/">Travel Trip</Link>
           </h1>
@@ -40,7 +40,7 @@ const Navbar = () => {
           </div>
           <button
             onClick={handleLogout}
-            className="absolute right-4 top-1/2 -translate-y-1/2 focus:outline-none bg-[#ffffff] px-3 py-1 rounded text-[#304766] hover:pointer-events-auto transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 focus:outline-none bg-[#ffffff] px-3 py-1 rounded text-[#304766] font-semibold"
           >
             Logout
           </button>
