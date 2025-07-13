@@ -28,29 +28,27 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Top Navbar for Desktop */}
+      {/* Nav for Desktop */}
       <nav className="hidden md:block fixed top-0 w-full bg-white shadow-md z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-[#304766] w-full">
-          <div className="flex justify-between items-center h-16 w-full">
-            <h1 className="text-2xl font-bold text-white font-[caveat]">
-              Travel Trip
-            </h1>
-            <div className="space-x-6 text-base font-medium">
-              <Link to="/" className={navItemClass("/")}>Home</Link>
-              <Link to="/my-trips" className={navItemClass("/my-trips")}>My Trips</Link>
-              <button
-                onClick={handleLogout}
-                className="text-red-500 hover:underline focus:outline-none bg-[#ffffff] px-2 py-1 rounded"
-              >
-                Logout
-              </button>
-            </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-[#304766] w-full relative h-16">
+          <h1 className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-white font-[caveat]">
+            <Link to="/">Travel Trip</Link>
+          </h1>
+          <div className="flex justify-center items-center h-full space-x-6 text-base font-medium">
+            <Link to="/" className={navItemClass("/")}>Home</Link>
+            <Link to="/my-trips" className={navItemClass("/my-trips")}>My Trips</Link>
           </div>
+          <button
+            onClick={handleLogout}
+            className="absolute right-4 top-1/2 -translate-y-1/2 focus:outline-none bg-[#ffffff] px-3 py-1 rounded text-[#304766] hover:pointer-events-auto transition-colors"
+          >
+            Logout
+          </button>
         </div>
       </nav>
 
-      {/* Bottom Navbar for Mobile */}
-      <nav className="md:hidden fixed bottom-0 w-full bg-white shadow-inner z-50">
+      {/* Nav for Mobile */}
+      <nav className="md:hidden fixed bottom-0 w-full bg-white z-50">
         <div className="flex justify-around py-2">
           <Link to="/" className={mobileNavItemClass("/")}>
             <FiHome className="text-xl mb-1" />
