@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check } from "lucide-react";
-import { TailSpin } from "react-loader-spinner";
+import Loader from "../components/loader";
 import Navbar from "../components/Navbar";
 
 const BookTrip = () => {
@@ -435,16 +435,7 @@ const BookTrip = () => {
                       >
                         {loading ? (
                           <span className="flex items-center justify-center">
-                            <TailSpin
-                              visible={true}
-                              height={24}
-                              width={24}
-                              color="#4fa94d"
-                              ariaLabel="tail-spin-loading"
-                              radius="1"
-                              wrapperStyle={{}}
-                              wrapperClass=""
-                            />
+                            <Loader />
                             <span className="ml-2">Booking...</span>
                           </span>
                         ) : currentStep === 5 ? "Book Trip" : "Next"}
@@ -506,16 +497,7 @@ const BookTrip = () => {
             >
               {loading ? (
                 <span className="flex items-center justify-center">
-                  <TailSpin
-                    visible={true}
-                    height={24}
-                    width={24}
-                    color="#4fa94d"
-                    ariaLabel="tail-spin-loading"
-                    radius="1"
-                    wrapperStyle={{}}
-                    wrapperClass=""
-                  />
+                  <Loader />
                   <span className="ml-2">Booking...</span>
                 </span>
               ) : currentStep === 5 ? "Book Trip" : "Next"}
