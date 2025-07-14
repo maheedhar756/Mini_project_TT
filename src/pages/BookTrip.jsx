@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check } from "lucide-react";
-import Loader from "../components/loader";
 import Navbar from "../components/Navbar";
 import GuestSelector from "../components/GuestSelector";
 import TravelAssistance from "../components/TravelAssistance";
@@ -270,8 +269,8 @@ const BookTrip = () => {
       case 5:
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-white mb-2">Confirmation</h3>
-            <p className="text-gray-300 mb-6">Confirm your details</p>
+            <h3 className="text-lg font-medium text-gray-800 mb-2">Confirmation</h3>
+            <p className="text-gray-600 mb-6">Confirm your details</p>
             <div className="bg-gray-50 p-6 rounded-lg text-left space-y-3">
               <div className="flex justify-between">
                 <span className="font-medium text-gray-700">Name:</span>

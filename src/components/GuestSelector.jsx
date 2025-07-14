@@ -26,7 +26,7 @@ const GuestSelector = ({ formData, onGuestChange }) => {
         <button
           type="button"
           onClick={() => onChange(count - 1)}
-          disabled={count === 0}
+          disabled={count === 0 || (label === 'Adults' && count === 1)}
           className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
         >
           -
