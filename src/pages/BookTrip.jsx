@@ -16,7 +16,8 @@ const BookTrip = () => {
     endDate: "",
     guests: "1",
     guestDetails: { adults: 1, children: 0, infants: 0 },
-    travelAssistance: "Car"
+    needsTravelAssistance: false,
+    travelAssistance: null
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -100,48 +101,52 @@ const BookTrip = () => {
     }));
   };
 
-  const handleAssistanceChange = (assistance) => {
+  const handleAssistanceChange = (assistanceData) => {
     setFormData(prev => ({
       ...prev,
-      travelAssistance: assistance
+      needsTravelAssistance: assistanceData.needsTravelAssistance,
+      travelAssistance: assistanceData.travelAssistance
     }));
   };
 
   const handleNext = () => {
     if (validateCurrentStep()) {
-      if (currentStep < 6) {
-        setCurrentStep(currentStep + 1);
-      } else {
-        setLoading(true);
-        // Save trip to localStorage
-        const trips = JSON.parse(localStorage.getItem('trips') || '[]');
-        const newTrip = {
-          id: Date.now(),
-          destination: formData.endLocation,
-          startLocation: formData.startLocation,
-          startDate: formData.startDate,
-          endDate: formData.endDate,
-          guests: formData.guests,
-          guestDetails: formData.guestDetails,
-          travelAssistance: formData.travelAssistance,
-          name: formData.name,
-          createdAt: new Date().toISOString()
-        };
-        trips.push(newTrip);
-        localStorage.setItem('trips', JSON.stringify(trips));
-        
-        setTimeout(() => {
-          setLoading(false);
-          navigate("/");
-        }, 1500);
-      }
+      setCurrentStep(currentStep + 1);
     }
   };
 
   const handleBack = () => {
-    if (currentStep > 1 && currentStep < 6) {
+    if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
+  };
+
+  const handleConfirm = () => {
+    setLoading(true);
+    
+    // Save trip to localStorage
+    const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+    const newTrip = {
+      id: Date.now(),
+      destination: formData.endLocation,
+      startLocation: formData.startLocation,
+      startDate: formData.startDate,
+      endDate: formData.endDate,
+      guests: formData.guests,
+      guestDetails: formData.guestDetails,
+      needsTravelAssistance: formData.needsTravelAssistance,
+      travelAssistance: formData.travelAssistance,
+      name: formData.name,
+      createdAt: new Date().toISOString()
+    };
+    trips.push(newTrip);
+    localStorage.setItem('trips', JSON.stringify(trips));
+    
+    // Navigate to home after a short delay
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/");
+    }, 1500);
   };
 
   const renderStepContent = () => {
@@ -264,7 +269,7 @@ const BookTrip = () => {
       
       case 5:
         return (
-          <div className="text-center space-y-4">
+          <div className="space-y-4">
             <h3 className="text-lg font-medium text-white mb-2">Confirmation</h3>
             <p className="text-gray-300 mb-6">Confirm your details</p>
             <div className="bg-gray-50 p-6 rounded-lg text-left space-y-3">
@@ -294,7 +299,9 @@ const BookTrip = () => {
               </div>
               <div className="flex justify-between">
                 <span className="font-medium text-gray-700">Travel Assistance:</span>
-                <span className="text-gray-600">{formData.travelAssistance}</span>
+                <span className="text-gray-600">
+                  {formData.needsTravelAssistance ? formData.travelAssistance : 'No'}
+                </span>
               </div>
             </div>
             <div className="flex space-x-3 mt-6">
@@ -305,31 +312,20 @@ const BookTrip = () => {
                 Cancel
               </button>
               <button
-                onClick={handleNext}
-                className="flex-1 bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                onClick={handleConfirm}
+                disabled={loading}
+                className={`flex-1 bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-2 px-4 rounded-lg transition-colors ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
               >
-                Confirm
+                {loading ? (
+                  <span className="flex items-center justify-center">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Confirming...
+                  </span>
+                ) : (
+                  "Confirm"
+                )}
               </button>
             </div>
-          </div>
-        );
-      
-      case 6:
-        return (
-          <div className="text-center space-y-6">
-            <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
-                <Check size={32} className="text-white" />
-              </div>
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">Awesome!</h3>
-            <p className="text-gray-300 mb-6">Your booking has been confirmed.</p>
-            <button
-              onClick={() => navigate("/")}
-              className="bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-2 px-6 rounded-lg transition-colors"
-            >
-              Book a New Trip
-            </button>
           </div>
         );
       
@@ -405,7 +401,7 @@ const BookTrip = () => {
 
                     {renderStepContent()}
 
-                    {currentStep < 6 && (
+                    {currentStep < 5 && (
                       <div className="mt-6 flex justify-between items-center">
                         {currentStep > 1 && (
                           <button
@@ -417,17 +413,12 @@ const BookTrip = () => {
                         )}
                         <button
                           onClick={handleNext}
-                          disabled={Object.keys(errors).length > 0 || loading}
+                          disabled={Object.keys(errors).length > 0}
                           className={`bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-2 px-8 rounded-lg transition-colors ${
                             currentStep === 1 ? "ml-auto" : ""
-                          } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                          }`}
                         >
-                          {loading ? (
-                            <span className="flex items-center justify-center">
-                              <Loader />
-                              <span className="ml-2">Booking...</span>
-                            </span>
-                          ) : currentStep === 5 ? "Book Trip" : "Next"}
+                          Next
                         </button>
                       </div>
                     )}
@@ -471,7 +462,7 @@ const BookTrip = () => {
 
           {renderStepContent()}
 
-          {currentStep < 6 && (
+          {currentStep < 5 && (
             <div className="mt-6 flex justify-between items-center">
               {currentStep > 1 && (
                 <button
@@ -483,15 +474,10 @@ const BookTrip = () => {
               )}
               <button
                 onClick={handleNext}
-                disabled={Object.keys(errors).length > 0 || loading}
-                className={`${currentStep === 1 ? "w-full" : "flex-1 ml-3"} bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-3 rounded-lg transition-colors ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                disabled={Object.keys(errors).length > 0}
+                className={`${currentStep === 1 ? "w-full" : "flex-1 ml-3"} bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-3 rounded-lg transition-colors`}
               >
-                {loading ? (
-                  <span className="flex items-center justify-center">
-                    <Loader />
-                    <span className="ml-2">Booking...</span>
-                  </span>
-                ) : currentStep === 5 ? "Book Trip" : "Next"}
+                Next
               </button>
             </div>
           )}

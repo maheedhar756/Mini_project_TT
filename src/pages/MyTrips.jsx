@@ -63,7 +63,7 @@ function MyTrips() {
                         <p><span className="font-medium">Date:</span> {formatDate(trip.startDate)} to {formatDate(trip.endDate)}</p>
                         <p><span className="font-medium">From:</span> {trip.startLocation}</p>
                         <p><span className="font-medium">Guests:</span> {trip.guests}</p>
-                        <p><span className="font-medium">Travel:</span> {trip.travelAssistance}</p>
+                        <p><span className="font-medium">Travel Assistance:</span> {trip.needsTravelAssistance ? trip.travelAssistance : 'No'}</p>
                       </div>
                     </div>
                     <button
@@ -118,7 +118,7 @@ function MyTrips() {
                   <p><span className="font-medium">Date:</span> {formatDate(trip.startDate)} to {formatDate(trip.endDate)}</p>
                   <p><span className="font-medium">From:</span> {trip.startLocation}</p>
                   <p><span className="font-medium">Guests:</span> {trip.guests}</p>
-                  <p><span className="font-medium">Travel:</span> {trip.travelAssistance}</p>
+                  <p><span className="font-medium">Travel Assistance:</span> {trip.needsTravelAssistance ? trip.travelAssistance : 'No'}</p>
                 </div>
               </div>
             ))}
