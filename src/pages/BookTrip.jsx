@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Check } from "lucide-react";
 import Loader from "../components/loader";
 import Navbar from "../components/Navbar";
+import GuestSelector from "../components/GuestSelector";
+import TravelAssistance from "../components/TravelAssistance";
 
 const BookTrip = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -13,10 +15,11 @@ const BookTrip = () => {
     startDate: "",
     endDate: "",
     guests: "1",
-    services: []
+    guestDetails: { adults: 1, children: 0, infants: 0 },
+    travelAssistance: "Car"
   });
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false); // NEW: loading state
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const steps = [
@@ -27,13 +30,11 @@ const BookTrip = () => {
     { number: 5, title: "Confirmation" }
   ];
 
-  // Get today's date in YYYY-MM-DD format
   const getTodayDate = () => {
     const today = new Date();
     return today.toISOString().split('T')[0];
   };
 
-  // Get minimum end date (start date or today, whichever is later)
   const getMinEndDate = () => {
     const today = getTodayDate();
     return formData.startDate && formData.startDate >= today ? formData.startDate : today;
@@ -76,7 +77,6 @@ const BookTrip = () => {
       [field]: value
     }));
     
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({
         ...prev,
@@ -84,7 +84,6 @@ const BookTrip = () => {
       }));
     }
 
-    // If start date changes, clear end date if it's now invalid
     if (field === 'startDate' && formData.endDate && value > formData.endDate) {
       setFormData(prev => ({
         ...prev,
@@ -93,12 +92,18 @@ const BookTrip = () => {
     }
   };
 
-  const handleServiceChange = (service, checked) => {
+  const handleGuestChange = (totalGuests, guestDetails) => {
     setFormData(prev => ({
       ...prev,
-      services: checked 
-        ? [...prev.services, service]
-        : prev.services.filter(s => s !== service)
+      guests: totalGuests,
+      guestDetails: guestDetails
+    }));
+  };
+
+  const handleAssistanceChange = (assistance) => {
+    setFormData(prev => ({
+      ...prev,
+      travelAssistance: assistance
     }));
   };
 
@@ -107,11 +112,28 @@ const BookTrip = () => {
       if (currentStep < 6) {
         setCurrentStep(currentStep + 1);
       } else {
-        setLoading(true); // NEW: show loading spinner
+        setLoading(true);
+        // Save trip to localStorage
+        const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+        const newTrip = {
+          id: Date.now(),
+          destination: formData.endLocation,
+          startLocation: formData.startLocation,
+          startDate: formData.startDate,
+          endDate: formData.endDate,
+          guests: formData.guests,
+          guestDetails: formData.guestDetails,
+          travelAssistance: formData.travelAssistance,
+          name: formData.name,
+          createdAt: new Date().toISOString()
+        };
+        trips.push(newTrip);
+        localStorage.setItem('trips', JSON.stringify(trips));
+        
         setTimeout(() => {
           setLoading(false);
           navigate("/");
-        }, 1500); // Simulate booking delay
+        }, 1500);
       }
     }
   };
@@ -226,51 +248,18 @@ const BookTrip = () => {
       
       case 3:
         return (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Number of Guests
-              </label>
-              <select 
-                value={formData.guests}
-                onChange={(e) => handleInputChange("guests", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="1">1 Guest</option>
-                <option value="2">2 Guests</option>
-                <option value="3">3 Guests</option>
-                <option value="4">4+ Guests</option>
-              </select>
-            </div>
-          </div>
+          <GuestSelector 
+            formData={formData} 
+            onGuestChange={handleGuestChange}
+          />
         );
       
       case 4:
         return (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                Select Additional Services
-              </label>
-              <div className="space-y-3">
-               ={[
-
-                  { id: 'insurance', label: 'Travel Insurance' },
-                  { id: 'guide', label: 'Local Guide' }
-                ].map((service) => (
-                  <label key={service.id} className="flex items-center">
-                    <input 
-                      type="checkbox" 
-                      checked={formData.services.includes(service.id)}
-                      onChange={(e) => handleServiceChange(service.id, e.target.checked)}
-                      className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" 
-                    />
-                    <span className="text-gray-700">{service.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
+          <TravelAssistance 
+            formData={formData} 
+            onAssistanceChange={handleAssistanceChange}
+          />
         );
       
       case 5:
@@ -303,16 +292,14 @@ const BookTrip = () => {
                 <span className="font-medium text-gray-700">Guests:</span>
                 <span className="text-gray-600">{formData.guests}</span>
               </div>
-              {formData.services.length > 0 && (
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Travel Assistance:</span>
-                  <span className="text-gray-600">{formData.services.join(', ')}</span>
-                </div>
-              )}
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-700">Travel Assistance:</span>
+                <span className="text-gray-600">{formData.travelAssistance}</span>
+              </div>
             </div>
             <div className="flex space-x-3 mt-6">
               <button
-                onClick={() => setCurrentStep(1)}
+                onClick={() => navigate("/")}
                 className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors"
               >
                 Cancel
@@ -339,7 +326,6 @@ const BookTrip = () => {
             <p className="text-gray-300 mb-6">Your booking has been confirmed.</p>
             <button
               onClick={() => navigate("/")}
-
               className="bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-2 px-6 rounded-lg transition-colors"
             >
               Book a New Trip
@@ -356,9 +342,9 @@ const BookTrip = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
-      {/* Desktop Layout - Centered */}
+      {/* Desktop Layout */}
       <div className="hidden md:block">
-        <div className="flex items-center justify-center min-h-[calc(120vh-80px)] px-6 py-8">
+        <div className="flex items-center justify-center min-h-[calc(100vh-80px)] px-6 py-8">
           <div className="w-full max-w-5xl">
             <div className="grid grid-cols-12 gap-8">
               {/* Left Sidebar - Steps */}
@@ -412,35 +398,39 @@ const BookTrip = () => {
                         {currentStep === 1 && "Enter your name and location details"}
                         {currentStep === 2 && "Choose your travel dates"}
                         {currentStep === 3 && "Select number of guests"}
-                        {currentStep === 4 && "Additional travel services"}
+                        {currentStep === 4 && "Choose your travel assistance"}
                         {currentStep === 5 && "Review and confirm your trip"}
                       </p>
                     </div>
 
                     {renderStepContent()}
 
-                    <div className="mt-6 flex justify-between items-center">
-                      {currentStep > 1 && currentStep < 6 && (
+                    {currentStep < 6 && (
+                      <div className="mt-6 flex justify-between items-center">
+                        {currentStep > 1 && (
+                          <button
+                            onClick={handleBack}
+                            className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium py-2 px-6 rounded-lg transition-colors"
+                          >
+                            Previous
+                          </button>
+                        )}
                         <button
-                          onClick={handleBack}
-                          className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium py-2 px-6 rounded-lg transition-colors"
+                          onClick={handleNext}
+                          disabled={Object.keys(errors).length > 0 || loading}
+                          className={`bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-2 px-8 rounded-lg transition-colors ${
+                            currentStep === 1 ? "ml-auto" : ""
+                          } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
                         >
-                          Back
+                          {loading ? (
+                            <span className="flex items-center justify-center">
+                              <Loader />
+                              <span className="ml-2">Booking...</span>
+                            </span>
+                          ) : currentStep === 5 ? "Book Trip" : "Next"}
                         </button>
-                      )}
-                      <button
-                        onClick={handleNext}
-                        disabled={Object.keys(errors).length > 0 || loading}
-                        className={`bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-2 px-8 rounded-lg transition-colors ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
-                      >
-                        {loading ? (
-                          <span className="flex items-center justify-center">
-                            <Loader />
-                            <span className="ml-2">Booking...</span>
-                          </span>
-                        ) : currentStep === 5 ? "Book Trip" : "Next"}
-                      </button>
-                    </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -474,35 +464,37 @@ const BookTrip = () => {
               {currentStep === 1 && "Enter your name and location details"}
               {currentStep === 2 && "Choose your travel dates"}
               {currentStep === 3 && "Select number of guests"}
-              {currentStep === 4 && "Additional travel services"}
+              {currentStep === 4 && "Choose your travel assistance"}
               {currentStep === 5 && "Review and confirm your trip"}
             </p>
           </div>
 
           {renderStepContent()}
 
-          <div className="mt-6 flex justify-between items-center">
-            {currentStep > 1 && currentStep < 6 && (
+          {currentStep < 6 && (
+            <div className="mt-6 flex justify-between items-center">
+              {currentStep > 1 && (
+                <button
+                  onClick={handleBack}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors"
+                >
+                  Previous
+                </button>
+              )}
               <button
-                onClick={handleBack}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors"
+                onClick={handleNext}
+                disabled={Object.keys(errors).length > 0 || loading}
+                className={`${currentStep === 1 ? "w-full" : "flex-1 ml-3"} bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-3 rounded-lg transition-colors ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
               >
-                Back
+                {loading ? (
+                  <span className="flex items-center justify-center">
+                    <Loader />
+                    <span className="ml-2">Booking...</span>
+                  </span>
+                ) : currentStep === 5 ? "Book Trip" : "Next"}
               </button>
-            )}
-            <button
-              onClick={handleNext}
-              disabled={Object.keys(errors).length > 0 || loading}
-              className={`w-full bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-3 rounded-lg transition-colors ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
-            >
-              {loading ? (
-                <span className="flex items-center justify-center">
-                  <Loader />
-                  <span className="ml-2">Booking...</span>
-                </span>
-              ) : currentStep === 5 ? "Book Trip" : "Next"}
-            </button>
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
