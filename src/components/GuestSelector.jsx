@@ -16,7 +16,7 @@ const GuestSelector = ({ formData, onGuestChange }) => {
     onGuestChange(total.toString(), newGuests);
   };
 
-  const GuestCounter = ({ label, sublabel, count, onChange, min = 0 }) => (
+  const GuestCounter = ({ label, sublabel, count, onChange }) => (
     <div className="flex items-center justify-between py-3">
       <div>
         <div className="font-medium text-gray-800">{label}</div>
@@ -26,7 +26,7 @@ const GuestSelector = ({ formData, onGuestChange }) => {
         <button
           type="button"
           onClick={() => onChange(count - 1)}
-          disabled={count === min}
+          disabled={count === 0}
           className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
         >
           -
@@ -55,7 +55,6 @@ const GuestSelector = ({ formData, onGuestChange }) => {
             sublabel="Age 13 or above"
             count={guests.adults}
             onChange={(value) => updateGuests('adults', value)}
-            min={1}
           />
           <hr className="border-gray-200" />
           <GuestCounter

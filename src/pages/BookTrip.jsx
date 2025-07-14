@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check } from "lucide-react";
-import Loader from "../components/loader";
 import Navbar from "../components/Navbar";
 import GuestSelector from "../components/GuestSelector";
 import TravelAssistance from "../components/TravelAssistance";
