@@ -40,7 +40,7 @@ const Navbar = () => {
           </div>
           <button
             onClick={handleLogout}
-            className="absolute right-4 top-1/2 -translate-y-1/2 focus:outline-none bg-[#ffffff] px-3 py-1 rounded text-[#304766] font-semibold"
+            className="absolute right-4 top-1/2 -translate-y-1/2 focus:outline-none bg-[#ffffff] px-3 py-1 rounded text-[#304766] font-semibold cursor-pointer"
           >
             Logout
           </button>
