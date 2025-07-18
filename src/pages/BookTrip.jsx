@@ -338,8 +338,8 @@ const BookTrip = () => {
       <Navbar />
 
       {/* Desktop Layout */}
-      <div className="hidden md:block">
-        <div className="flex items-center justify-center min-h-[calc(100vh-80px)] px-6 py-8">
+      <div className="hidden md:block m-auto mt-10 max-w-5xl">
+        <div className="flex items-center justify-center min-h-[calc(90vh)] px-6 py-8">
           <div className="w-full max-w-5xl">
             <div className="grid grid-cols-12 gap-8">
               {/* Left Sidebar - Steps */}
@@ -384,20 +384,19 @@ const BookTrip = () => {
               {/* Right Content - Form */}
               <div className="col-span-9">
                 <div className="bg-[#2f436e] rounded-lg shadow-lg p-8">
+                  <div className="mb-6 text-center">
+                    <h3 className="text-xl font-semibold text-white mb-2">
+                      {steps[currentStep - 1].title}
+                    </h3>
+                    <p className="text-white">
+                      {currentStep === 1 && "Enter your name and location details"}
+                      {currentStep === 2 && "Choose your travel dates"}
+                      {currentStep === 3 && "Select number of guests"}
+                      {currentStep === 4 && "Choose your travel assistance"}
+                      {currentStep === 5 && "Review and confirm your trip"}
+                    </p>
+                  </div>
                   <div className="bg-white rounded-lg p-6">
-                    <div className="mb-6 text-center">
-                      <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                        {steps[currentStep - 1].title}
-                      </h3>
-                      <p className="text-gray-600">
-                        {currentStep === 1 && "Enter your name and location details"}
-                        {currentStep === 2 && "Choose your travel dates"}
-                        {currentStep === 3 && "Select number of guests"}
-                        {currentStep === 4 && "Choose your travel assistance"}
-                        {currentStep === 5 && "Review and confirm your trip"}
-                      </p>
-                    </div>
-
                     {renderStepContent()}
 
                     {currentStep < 5 && (
