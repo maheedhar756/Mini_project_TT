@@ -24,7 +24,7 @@ const Home = () => {
               
               {/* Book a New Trip Button */}
               <Link to="/book-a-new-trip">
-                <button className="bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-3 px-8 rounded-lg transition-colors shadow-lg">
+                <button className="bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-3 px-8 rounded-lg transition-colors shadow-lg hover:cursor-pointer">
                   Book a New Trip
                 </button>
               </Link>
@@ -42,7 +42,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Mobile Layout - Matches Figma Mobile Design */}
+      {/* Mobile Layout */}
       <div className="md:hidden px-4 py-8 pb-24">
         <div className="bg-white rounded-2xl shadow-lg p-6 mx-auto max-w-sm">
           <div className="flex justify-center mb-8">

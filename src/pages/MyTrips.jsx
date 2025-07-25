@@ -47,7 +47,7 @@ function MyTrips() {
               <h2 className="text-xl font-semibold text-gray-800 mb-2">No upcoming trips.</h2>
               <p className="text-gray-600 mb-6">When you book a trip, you will see your trip details here.</p>
               <Link to="/book-a-new-trip">
-                <button className="bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                <button className="bg-[#2f436e] hover:bg-[#1f3251] text-white font-medium py-2 px-6 rounded-lg transition-colors hover:cursor-pointer">
                   Book a New Trip
                 </button>
               </Link>
@@ -68,7 +68,7 @@ function MyTrips() {
                     </div>
                     <button
                       onClick={() => handleCancelTrip(trip.id)}
-                      className="text-blue-600 hover:text-blue-800 font-medium text-sm border border-blue-600 hover:border-blue-800 px-3 py-1 rounded transition-colors"
+                      className="text-blue-600 hover:text-white font-medium text-sm border border-blue-600 hover:border-blue-800 px-3 py-1 rounded transition-colors hover:bg-blue-800"
                     >
                       Cancel
                     </button>
